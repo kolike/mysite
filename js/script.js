@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', function () {
         tabsContent = document.querySelectorAll('.tabcontent'),
         tabsParent = document.querySelector('.tabheader__items');
 
-    function hideTabContent() {
+    function hideAllTabs() {
 
         tabsContent.forEach(item => {
             item.classList.add('hide');
@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', function () {
         tabs[i].classList.add('tabheader__item_active');
     }
 
-    hideTabContent();
+    hideAllTabs();
     showTabContent();
 
     tabsParent.addEventListener('click', function (event) {
@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', function () {
         if (target && target.classList.contains('tabheader__item')) {
             tabs.forEach((item, i) => {
                 if (target == item) {
-                    hideTabContent();
+                    hideAllTabs();
                     showTabContent(i);
                 }
             });
@@ -129,7 +129,6 @@ window.addEventListener('DOMContentLoaded', function () {
     });
 
     const modalTimerId = setTimeout(openModal, 300000);
-    // Изменил значение, чтобы не отвлекало
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -138,8 +137,6 @@ window.addEventListener('DOMContentLoaded', function () {
         }
     }
     window.addEventListener('scroll', showModalByScroll);
-
-    // Используем классы для создание карточек меню
 
     class MenuCard {
         constructor(src, alt, title, descr, price, parentSelector, ...classes) {
@@ -195,29 +192,6 @@ window.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-    // getResource('http://localhost:3000/menu')
-    //     .then(data => createCard(data));
-
-    // function createCard(data) {
-    //     data.forEach(({img, altimg, title, descr, price}) => {
-    //         const element = document.createElement('div');
-
-    //         element.classList.add("menu__item");
-
-    //         element.innerHTML = `
-    //             <img src=${img} alt=${altimg}>
-    //             <h3 class="menu__item-subtitle">${title}</h3>
-    //             <div class="menu__item-descr">${descr}</div>
-    //             <div class="menu__item-divider"></div>
-    //             <div class="menu__item-price">
-    //                 <div class="menu__item-cost">Цена:</div>
-    //                 <div class="menu__item-total"><span>${price}</span> грн/день</div>
-    //             </div>
-    //         `;
-    //         document.querySelector(".menu .container").append(element);
-    //     });
-    // }
-
     // Forms
 
     const forms = document.querySelectorAll('form');
@@ -259,10 +233,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
             let statusMessage = document.createElement('img');
             statusMessage.src = message.loading;
-            statusMessage.style.cssText = `
-                display: block;
-                margin: 0 auto;
-            `;
+            statusMessage.classList.add('message-loading');
+
             form.insertAdjacentElement('afterend', statusMessage);
 
             const formData = new FormData(form);
@@ -335,13 +307,13 @@ window.addEventListener('DOMContentLoaded', function () {
     console.log(dots)
 
     slideBtnNext.addEventListener('click', () => {
-        ++slideIndex;
+        slideIndex++;
         showSlides(slideIndex);
         getDotOpactiy();
 
     });
     slideBtnPrev.addEventListener('click', () => {
-        --slideIndex;
+        slideIndex--;
         showSlides(slideIndex);
         getDotOpactiy();
     });
