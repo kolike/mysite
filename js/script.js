@@ -1,33 +1,33 @@
-window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener('DOMContentLoaded', function () {
   // Tabs
 
-  const tabs = document.querySelectorAll(".tabheader__item"),
-    tabsContent = document.querySelectorAll(".tabcontent"),
-    tabsParent = document.querySelector(".tabheader__items");
+  const tabs = document.querySelectorAll('.tabheader__item'),
+    tabsContent = document.querySelectorAll('.tabcontent'),
+    tabsParent = document.querySelector('.tabheader__items');
 
   function hideAllTabs() {
     tabsContent.forEach((item) => {
-      item.classList.add("hide");
-      item.classList.remove("show", "fade");
+      item.classList.add('hide');
+      item.classList.remove('show', 'fade');
     });
 
     tabs.forEach((item) => {
-      item.classList.remove("tabheader__item_active");
+      item.classList.remove('tabheader__item_active');
     });
   }
 
   function showTabContent(i = 0) {
-    tabsContent[i].classList.add("show", "fade");
-    tabsContent[i].classList.remove("hide");
-    tabs[i].classList.add("tabheader__item_active");
+    tabsContent[i].classList.add('show', 'fade');
+    tabsContent[i].classList.remove('hide');
+    tabs[i].classList.add('tabheader__item_active');
   }
 
   hideAllTabs();
   showTabContent();
 
-  tabsParent.addEventListener("click", function (event) {
+  tabsParent.addEventListener('click', function (event) {
     const target = event.target;
-    if (target && target.classList.contains("tabheader__item")) {
+    if (target && target.classList.contains('tabheader__item')) {
       tabs.forEach((item, i) => {
         if (target == item) {
           hideAllTabs();
@@ -39,7 +39,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   // Timer
 
-  const deadline = "2022-06-11";
+  const deadline = '2022-06-11';
 
   function getTimeRemaining(endtime) {
     const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -59,7 +59,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   function getZero(num) {
     if (num >= 0 && num < 10) {
-      return "0" + num;
+      return '0' + num;
     } else {
       return num;
     }
@@ -67,10 +67,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
   function setClock(selector, endtime) {
     const timer = document.querySelector(selector),
-      days = timer.querySelector("#days"),
-      hours = timer.querySelector("#hours"),
-      minutes = timer.querySelector("#minutes"),
-      seconds = timer.querySelector("#seconds"),
+      days = timer.querySelector('#days'),
+      hours = timer.querySelector('#hours'),
+      minutes = timer.querySelector('#minutes'),
+      seconds = timer.querySelector('#seconds'),
       timeInterval = setInterval(updateClock, 1000);
 
     updateClock();
@@ -89,38 +89,38 @@ window.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  setClock(".timer", deadline);
+  setClock('.timer', deadline);
 
   // Modal
 
-  const modalTrigger = document.querySelectorAll("[data-modal]"),
-    modal = document.querySelector(".modal");
+  const modalTrigger = document.querySelectorAll('[data-modal]'),
+    modal = document.querySelector('.modal');
 
   modalTrigger.forEach((btn) => {
-    btn.addEventListener("click", openModal);
+    btn.addEventListener('click', openModal);
   });
 
   function closeModal() {
-    modal.classList.add("hide");
-    modal.classList.remove("show");
-    document.body.style.overflow = "";
+    modal.classList.add('hide');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
   }
 
   function openModal() {
-    modal.classList.add("show");
-    modal.classList.remove("hide");
-    document.body.style.overflow = "hidden";
+    modal.classList.add('show');
+    modal.classList.remove('hide');
+    document.body.style.overflow = 'hidden';
     clearInterval(modalTimerId);
   }
 
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal || e.target.getAttribute("data-close") == "") {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.getAttribute('data-close') == '') {
       closeModal();
     }
   });
 
-  document.addEventListener("keydown", (e) => {
-    if (e.code === "Escape" && modal.classList.contains("show")) {
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Escape' && modal.classList.contains('show')) {
       closeModal();
     }
   });
@@ -133,10 +133,10 @@ window.addEventListener("DOMContentLoaded", function () {
       document.documentElement.scrollHeight
     ) {
       openModal();
-      window.removeEventListener("scroll", showModalByScroll);
+      window.removeEventListener('scroll', showModalByScroll);
     }
   }
-  window.addEventListener("scroll", showModalByScroll);
+  window.addEventListener('scroll', showModalByScroll);
 
   class MenuCard {
     constructor(src, alt, title, descr, price, parentSelector, ...classes) {
@@ -156,10 +156,10 @@ window.addEventListener("DOMContentLoaded", function () {
     }
 
     render() {
-      const element = document.createElement("div");
+      const element = document.createElement('div');
 
       if (this.classes.length === 0) {
-        this.classes = "menu__item";
+        this.classes = 'menu__item';
         element.classList.add(this.classes);
       } else {
         this.classes.forEach((className) => element.classList.add(className));
@@ -179,26 +179,19 @@ window.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  getResource("http://localhost:3000/menu").then((data) => {
+  getResource('http://localhost:3000/menu').then((data) => {
     data.forEach(({ img, altimg, title, descr, price }) => {
-      new MenuCard(
-        img,
-        altimg,
-        title,
-        descr,
-        price,
-        ".menu .container"
-      ).render();
+      new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
     });
   });
 
   // Forms
 
-  const forms = document.querySelectorAll("form");
+  const forms = document.querySelectorAll('form');
   const message = {
-    loading: "img/form/spinner.svg",
-    success: "Спасибо! Скоро мы с вами свяжемся",
-    failure: "Что-то пошло не так...",
+    loading: 'img/form/spinner.svg',
+    success: 'Спасибо! Скоро мы с вами свяжемся',
+    failure: 'Что-то пошло не так...',
   };
 
   forms.forEach((item) => {
@@ -207,9 +200,9 @@ window.addEventListener("DOMContentLoaded", function () {
 
   const postData = async (url, data) => {
     let res = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: data,
     });
@@ -228,20 +221,20 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   function bindPostData(form) {
-    form.addEventListener("submit", (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      let statusMessage = document.createElement("img");
+      let statusMessage = document.createElement('img');
       statusMessage.src = message.loading;
-      statusMessage.classList.add("message-loading");
+      statusMessage.classList.add('message-loading');
 
-      form.insertAdjacentElement("afterend", statusMessage);
+      form.insertAdjacentElement('afterend', statusMessage);
 
       const formData = new FormData(form);
 
       const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-      postData("http://localhost:3000/requests", json)
+      postData('http://localhost:3000/requests', json)
         .then((data) => {
           console.log(data);
           showThanksModal(message.success);
@@ -257,49 +250,49 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   function showThanksModal(message) {
-    const prevModalDialog = document.querySelector(".modal__dialog");
+    const prevModalDialog = document.querySelector('.modal__dialog');
 
-    prevModalDialog.classList.add("hide");
+    prevModalDialog.classList.add('hide');
     openModal();
 
-    const thanksModal = document.createElement("div");
-    thanksModal.classList.add("modal__dialog");
+    const thanksModal = document.createElement('div');
+    thanksModal.classList.add('modal__dialog');
     thanksModal.innerHTML = `
             <div class="modal__content">
                 <div class="modal__close" data-close>×</div>
                 <div class="modal__title">${message}</div>
             </div>
         `;
-    document.querySelector(".modal").append(thanksModal);
+    document.querySelector('.modal').append(thanksModal);
     setTimeout(() => {
       thanksModal.remove();
-      prevModalDialog.classList.add("show");
-      prevModalDialog.classList.remove("hide");
+      prevModalDialog.classList.add('show');
+      prevModalDialog.classList.remove('hide');
       closeModal();
     }, 4000);
   }
 
   //slider
-  const slides = document.querySelectorAll(".offer__slide"),
-    slider = document.querySelector(".offer__slider"),
+  const slides = document.querySelectorAll('.offer__slide'),
+    slider = document.querySelector('.offer__slider'),
     dots = [],
-    slideBtnPrev = document.querySelector(".offer__slider-prev"),
-    slideBtnNext = document.querySelector(".offer__slider-next"),
-    slideId = document.querySelector("#current");
+    slideBtnPrev = document.querySelector('.offer__slider-prev'),
+    slideBtnNext = document.querySelector('.offer__slider-next'),
+    slideId = document.querySelector('#current');
   let slideIndex = 1;
 
   slideId.textContent = `0${slideIndex}`;
   showSlides(slideIndex);
-  slider.style.position = "relative";
+  slider.style.position = 'relative';
 
-  const indicators = document.createElement("ol");
-  indicators.classList.add("carousel-indicators");
+  const indicators = document.createElement('ol');
+  indicators.classList.add('carousel-indicators');
   slider.append(indicators);
 
   for (let i = 0; i < slides.length; i++) {
-    const dot = document.createElement("li");
-    dot.setAttribute("data-slide-to", i + 1);
-    dot.classList.add("dot");
+    const dot = document.createElement('li');
+    dot.setAttribute('data-slide-to', i + 1);
+    dot.classList.add('dot');
     indicators.append(dot);
     if (i === 0) {
       dot.style.opacity = 1;
@@ -307,20 +300,20 @@ window.addEventListener("DOMContentLoaded", function () {
     dots.push(dot);
   }
 
-  slideBtnNext.addEventListener("click", () => {
+  slideBtnNext.addEventListener('click', () => {
     slideIndex++;
     showSlides(slideIndex);
     getDotOpactiy();
   });
-  slideBtnPrev.addEventListener("click", () => {
+  slideBtnPrev.addEventListener('click', () => {
     slideIndex--;
     showSlides(slideIndex);
     getDotOpactiy();
   });
 
   dots.forEach((item) => {
-    item.addEventListener("click", () => {
-      slideIndex = item.getAttribute("data-slide-to");
+    item.addEventListener('click', () => {
+      slideIndex = item.getAttribute('data-slide-to');
       showSlides(slideIndex);
       getDotOpactiy();
     });
@@ -333,8 +326,8 @@ window.addEventListener("DOMContentLoaded", function () {
       slideIndex = slides.length;
     }
 
-    slides.forEach((item) => (item.style.display = "none"));
-    slides[slideIndex - 1].style.display = "block";
+    slides.forEach((item) => (item.style.display = 'none'));
+    slides[slideIndex - 1].style.display = 'block';
 
     if (slides.length < 10) {
       slideId.textContent = `0${slideIndex}`;
@@ -351,22 +344,22 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 
   //calc
-  const result = document.querySelector(".calculating__result span");
+  const result = document.querySelector('.calculating__result span');
 
   let sex, height, weight, age, ratio;
 
-  if (localStorage.getItem("sex")) {
-    sex = localStorage.getItem("sex");
+  if (localStorage.getItem('sex')) {
+    sex = localStorage.getItem('sex');
   } else {
-    sex = "female";
-    localStorage.setItem("sex", "female");
+    sex = 'female';
+    localStorage.setItem('sex', 'female');
   }
 
-  if (localStorage.getItem("ratio")) {
-    ratio = localStorage.getItem("ratio");
+  if (localStorage.getItem('ratio')) {
+    ratio = localStorage.getItem('ratio');
   } else {
     ratio = 1.375;
-    localStorage.setItem("ratio", 1.375);
+    localStorage.setItem('ratio', 1.375);
   }
 
   function applyLocalSettings(selector, activeClass) {
@@ -375,34 +368,27 @@ window.addEventListener("DOMContentLoaded", function () {
     elements.forEach((elem) => {
       elem.classList.remove(activeClass);
 
-      if (elem.getAttribute("id") === localStorage.getItem("sex")) {
+      if (elem.getAttribute('id') === localStorage.getItem('sex')) {
         elem.classList.add(activeClass);
       }
-      if (elem.getAttribute("data-ratio") === localStorage.getItem("ratio")) {
+      if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
         elem.classList.add(activeClass);
       }
     });
   }
-  applyLocalSettings("#gender div", "calculating__choose-item_active");
-  applyLocalSettings(
-    ".calculating__choose_big div",
-    "calculating__choose-item_active"
-  );
+  applyLocalSettings('#gender div', 'calculating__choose-item_active');
+  applyLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
 
   function calcTotal() {
     if (!sex || !height || !weight || !age || !ratio) {
-      result.textContent = "____";
+      result.textContent = '____';
       return;
     }
 
-    if (sex === "female") {
-      result.textContent = Math.round(
-        (447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio
-      );
+    if (sex === 'female') {
+      result.textContent = Math.round((447.6 + 9.2 * weight + 3.1 * height - 4.3 * age) * ratio);
     } else {
-      result.textContent = Math.round(
-        (88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio
-      );
+      result.textContent = Math.round((88.36 + 13.4 * weight + 4.8 * height - 5.7 * age) * ratio);
     }
   }
 
@@ -411,13 +397,13 @@ window.addEventListener("DOMContentLoaded", function () {
   function getStaticInformation(selector, activeClass) {
     const elements = document.querySelectorAll(selector);
     elements.forEach((elem) => {
-      elem.addEventListener("click", (e) => {
-        if (e.target.getAttribute("data-ratio")) {
-          ratio = +e.target.getAttribute("data-ratio");
-          localStorage.setItem("ratio", ratio);
+      elem.addEventListener('click', (e) => {
+        if (e.target.getAttribute('data-ratio')) {
+          ratio = +e.target.getAttribute('data-ratio');
+          localStorage.setItem('ratio', ratio);
         } else {
-          sex = e.target.getAttribute("id");
-          localStorage.setItem("sex", sex);
+          sex = e.target.getAttribute('id');
+          localStorage.setItem('sex', sex);
         }
         elements.forEach((elem) => {
           elem.classList.remove(activeClass);
@@ -429,31 +415,28 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  getStaticInformation("#gender div", "calculating__choose-item_active");
-  getStaticInformation(
-    ".calculating__choose_big div",
-    "calculating__choose-item_active"
-  );
+  getStaticInformation('#gender div', 'calculating__choose-item_active');
+  getStaticInformation('.calculating__choose_big div', 'calculating__choose-item_active');
 
   function getDynamicInformation(selector) {
     const input = document.querySelector(selector);
 
-    input.addEventListener("input", () => {
+    input.addEventListener('input', () => {
       if (input.value.match(/\D/g)) {
-        input.style.border = "1px solid red";
-        input.style.backgroundColor = "rgba(255,0,0,0.4)";
+        input.style.border = '1px solid red';
+        input.style.backgroundColor = 'rgba(255,0,0,0.4)';
       } else {
-        input.style.border = "none";
-        input.style.backgroundColor = "white";
+        input.style.border = 'none';
+        input.style.backgroundColor = 'white';
       }
-      switch (input.getAttribute("id")) {
-        case "height":
+      switch (input.getAttribute('id')) {
+        case 'height':
           height = +input.value;
           break;
-        case "weight":
+        case 'weight':
           weight = +input.value;
           break;
-        case "age":
+        case 'age':
           age = +input.value;
           break;
       }
@@ -461,7 +444,7 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  getDynamicInformation("#height");
-  getDynamicInformation("#weight");
-  getDynamicInformation("#age");
+  getDynamicInformation('#height');
+  getDynamicInformation('#weight');
+  getDynamicInformation('#age');
 });
