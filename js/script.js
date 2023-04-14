@@ -1,92 +1,47 @@
-"use strict"
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', function () {
+
+    // Tabs
 
     const tabs = document.querySelectorAll('.tabheader__item'),
         tabsContent = document.querySelectorAll('.tabcontent'),
         tabsParent = document.querySelector('.tabheader__items');
 
     function hideAllTabs() {
+
         tabsContent.forEach(item => {
-            item.style.display = 'none';
+            item.classList.add('hide');
+            item.classList.remove('show', 'fade');
         });
+
         tabs.forEach(item => {
             item.classList.remove('tabheader__item_active');
-
         });
     }
 
-    function showTab(i = 0) {
-        tabsContent[i].style.display = 'block';
+    function showTabContent(i = 0) {
+        tabsContent[i].classList.add('show', 'fade');
+        tabsContent[i].classList.remove('hide');
         tabs[i].classList.add('tabheader__item_active');
     }
+
     hideAllTabs();
-    showTab();
+    showTabContent();
 
-    tabsParent.addEventListener('click', (event) => {
+    tabsParent.addEventListener('click', function (event) {
         const target = event.target;
-
         if (target && target.classList.contains('tabheader__item')) {
             tabs.forEach((item, i) => {
                 if (target == item) {
                     hideAllTabs();
-                    showTab(i);
+                    showTabContent(i);
                 }
             });
         }
     });
 
-    //Modal
-
-    const modalTrigger = document.querySelectorAll('[data-modal]'),
-        modal = document.querySelector('.modal');
-
-    modalTrigger.forEach(btn => {
-        btn.addEventListener('click', openModal);
-    });
-
-
-    function openModal() {
-        modal.classList.add('show');
-        modal.classList.remove('hide');
-        document.body.style.overflow = 'hidden';
-        clearInterval(modalTimerId);
-    }
-
-    function closeModal() {
-        modal.classList.add('hide');
-        modal.classList.remove('show');
-        document.body.style.overflow = '';
-    }
-
-
-    //modalCloseBtn.addEventListener('click', closeModal);
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal || e.target.getAttribute('data-close') == "") {
-            closeModal();
-        }
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.code === "Escape" && modal.classList.contains('show')) {
-            closeModal();
-        }
-    });
-
-    function showModalByScroll() {
-        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-            openModal();
-            window.removeEventListener('scroll', showModalByScroll);
-        }
-    }
-    window.addEventListener('scroll', showModalByScroll);
-
-    const modalTimerId = setTimeout((openModal), 50000);
-
-
     // Timer
 
-    const deadline = '2023-06-11';
+    const deadline = '2022-06-11';
 
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -138,7 +93,51 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     setClock('.timer', deadline);
-    // Используем классы для создание карточек меню
+
+    // Modal
+
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal');
+
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', openModal);
+    });
+
+    function closeModal() {
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+
+    function openModal() {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        clearInterval(modalTimerId);
+    }
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target.getAttribute('data-close') == "") {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape" && modal.classList.contains('show')) {
+            closeModal();
+        }
+    });
+
+    const modalTimerId = setTimeout(openModal, 300000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+    window.addEventListener('scroll', showModalByScroll);
+
     class MenuCard {
         constructor(src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
@@ -180,34 +179,20 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    new MenuCard(
-        "img/tabs/vegy.jpg",
-        "vegy",
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        9,
-        ".menu .container"
-    ).render();
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({
+                img,
+                altimg,
+                title,
+                descr,
+                price
+            }) => {
+                new MenuCard(img, altimg, title, descr, price, ".menu .container").render();
+            });
+        });
 
-    new MenuCard(
-        "img/tabs/post.jpg",
-        "post",
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        14,
-        ".menu .container"
-    ).render();
-
-    new MenuCard(
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню “Премиум”',
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        21,
-        ".menu .container"
-    ).render();
-
-    //Forms
+    // Forms
 
     const forms = document.querySelectorAll('form');
     const message = {
@@ -217,55 +202,59 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
 
-    function postData(form) {
+    const postData = async (url, data) => {
+        let res = await fetch(url, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: data
+        });
+
+        return await res.json();
+    };
+
+    async function getResource(url) {
+        let res = await fetch(url);
+
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+        }
+
+        return await res.json();
+    }
+
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
             let statusMessage = document.createElement('img');
             statusMessage.src = message.loading;
-            statusMessage.style.cssText = `
-            display:block;
-            margin: 0 auto;`
+            statusMessage.classList.add('message-loading');
 
             form.insertAdjacentElement('afterend', statusMessage);
 
-
-
-
-            // request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
             const formData = new FormData(form);
 
-            const object = {};
-            formData.forEach(function (value, key) {
-                object[key] = value;
-            });
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-
-            fetch('server.php', {
-                    method: "POST",
-                    headres: {
-                        'Content-type': 'aplication/json'
-                    },
-                    body: JSON.stringify(object)
-                })
-                .then(data => data.text())
+            postData('http://localhost:3000/requests', json)
                 .then(data => {
                     console.log(data);
-                    showThansModal(message.success);
-
+                    showThanksModal(message.success);
                     statusMessage.remove();
                 }).catch(() => {
-                    showThansModal(message.failure);
+                    showThanksModal(message.failure);
                 }).finally(() => {
                     form.reset();
                 });
         });
     }
 
-    function showThansModal(message) {
+    function showThanksModal(message) {
         const prevModalDialog = document.querySelector('.modal__dialog');
 
         prevModalDialog.classList.add('hide');
@@ -274,11 +263,11 @@ window.addEventListener('DOMContentLoaded', () => {
         const thanksModal = document.createElement('div');
         thanksModal.classList.add('modal__dialog');
         thanksModal.innerHTML = `
-        <div class="modal__content">
-        <div class = "modal__close data-close>&times;</div>
-        <div class="modal__title">${message}</div>
-        </div>`;
-
+            <div class="modal__content">
+                <div class="modal__close" data-close>×</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
         document.querySelector('.modal').append(thanksModal);
         setTimeout(() => {
             thanksModal.remove();
@@ -288,123 +277,77 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     }
 
-    /*
-        let center = [48.8866527839977, 2.34310679732974];
+    //slider
+    const slides = document.querySelectorAll('.offer__slide'),
+        slider = document.querySelector('.offer__slider'),
+        dots = [],
+        slideBtnPrev = document.querySelector('.offer__slider-prev'),
+        slideBtnNext = document.querySelector('.offer__slider-next'),
+        slideId = document.querySelector('#current');
+    let slideIndex = 1;
 
-        function init() {
-            let map = new ymaps.Map('map-test', {
-                center: center,
-                zoom: 17
-            });
+    slideId.textContent = `0${slideIndex}`;
+    showSlides(slideIndex);
+    slider.style.position = 'relative';
 
-            map.controls.remove('geolocationControl'); // удаляем геолокацию
-            map.controls.remove('searchControl'); // удаляем поиск
-            map.controls.remove('trafficControl'); // удаляем контроль трафика
-            map.controls.remove('typeSelector'); // удаляем тип
-            map.controls.remove('fullscreenControl'); // удаляем кнопку перехода в полноэкранный режим
-            map.controls.remove('zoomControl'); // удаляем контрол зуммирования
-            map.controls.remove('rulerControl'); // удаляем контрол правил
-            map.behaviors.disable(['scrollZoom']); // отключаем скролл карты (опционально)
+    const indicators = document.createElement('ol');
+    indicators.classList.add('carousel-indicators');
+    slider.append(indicators);
+
+    for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('li');
+        dot.setAttribute('data-slide-to', i + 1);
+        dot.classList.add('dot');
+        indicators.append(dot);
+        if (i === 0) {
+            dot.style.opacity = 1;
+        }
+        dots.push(dot);
+    }
+    console.log(dots)
+
+    slideBtnNext.addEventListener('click', () => {
+        slideIndex++;
+        showSlides(slideIndex);
+        getDotOpactiy();
+
+    });
+    slideBtnPrev.addEventListener('click', () => {
+        slideIndex--;
+        showSlides(slideIndex);
+        getDotOpactiy();
+    });
+
+    dots.forEach((item) => {
+        item.addEventListener('click', () => {
+            slideIndex = item.getAttribute('data-slide-to');
+            showSlides(slideIndex);
+            getDotOpactiy();
+        });
+
+    });
+
+    function showSlides(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
+        } else if (n < 1) {
+            slideIndex = slides.length;
         }
 
-        ymaps.ready(init);
-    */
+        slides.forEach(item => item.style.display = 'none');
+        slides[slideIndex - 1].style.display = 'block';
 
+        if (slides.length < 10) {
+            slideId.textContent = `0${slideIndex}`;
+        } else {
+            slideId.textContent = slides.length;
+        }
+    }
 
+    function getDotOpactiy() {
+        dots.forEach((item) => {
+            item.style.opacity = 0.5;
+        });
+        dots[slideIndex - 1].style.opacity = 1;
+    }
 });
-
-// const films = [{
-//         name: 'Titanic',
-//         rating: 9
-//     },
-//     {
-//         name: 'Die hard 5',
-//         rating: 5
-//     },
-//     {
-//         name: 'Matrix',
-//         rating: 8
-//     },
-//     {
-//         name: 'Some bad film',
-//         rating: 4
-//     }
-// ];
-
-// // function showGoodFilms(arr) {
-// //     const newArr = arr.filter((item) => {
-// //         if (item.rating >= 8) {
-// //             return item;
-// //         }
-// //     });
-
-// //     return newArr;
-// // }
-// // console.log(showGoodFilms(films));
-
-// // function showListOfFilms(arr) {
-// //     const newArr = arr.map((item) => item.name)
-// //         .reduce((sum, item) => `${sum}, ${item}`);
-
-// //     return newArr;
-// // }
-// // console.log(showListOfFilms(films));
-
-// function setFilmsIds(arr) {
-//     const newArr = [];
-//     arr.forEach((item, i) => {
-//         newArr[i] = item;
-//         newArr[i].id = i;
-//     });
-//     return newArr;
-// }
-// console.log(setFilmsIds(films));
-
-// const tranformedArray = setFilmsIds(films);
-
-// function checkFilms(arr) {
-//     return arr.some((item) => item.id);
-// }
-// console.log(checkFilms(tranformedArray));
-
-// const funds = [{
-//         amount: -1400
-//     },
-//     {
-//         amount: 2400
-//     },
-//     {
-//         amount: -1000
-//     },
-//     {
-//         amount: 500
-//     },
-//     {
-//         amount: 10400
-//     },
-//     {
-//         amount: -11400
-//     }
-// ];
-
-// const getPositiveIncomeAmount = (data) => {
-//     const newArr = data.filter((item) => item.amount > 0)
-//         .map((item) => item.amount)
-//         .reduce((sum, item) => sum + item);
-
-//     return newArr;
-// };
-
-// //console.log(getPositiveIncomeAmount(funds));
-
-// const getTotalIncomeAmount = (data) => {
-//     //   console.log(data.every((item) => item.amount > 0));
-//     if (data.every((item) => item.amount > 0)) {
-//         return getPositiveIncomeAmount(data);
-//     } else {
-//         return newArr = data.map((item) => item.amount)
-//             .reduce((sum, item) => sum + item);
-//     }
-
-// };
-// console.log(getTotalIncomeAmount(funds));
